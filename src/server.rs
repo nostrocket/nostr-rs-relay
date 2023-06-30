@@ -499,7 +499,8 @@ async fn handle_web_request(
     </div>
     <div>
         <p> This page will not refresh </p>
-        <p> Verify admission <a href=/account?pubkey={}>here</a> once you have paid</p>
+        <p> After you have paid the invoice, publish an event to trigger the relay to check for payment. The easiest way to do this is by adding this relay to one of your clients and rebroadcasting an event.</p>
+        <p> Events published after that should be accepted by the relay and your admission status should be shown <a href=/account?pubkey={}>here</a>.</p>
     </div>
     </div>
   </body>
