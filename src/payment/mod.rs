@@ -243,7 +243,7 @@ impl Payment {
             .await?;
 
         // Admission event invoice and terms to pubkey that is joining
-        self.send_admission_message(pubkey, &invoice_info).await?;
+        //self.send_admission_message(pubkey, &invoice_info).await?;
 
         Ok(invoice_info)
     }
