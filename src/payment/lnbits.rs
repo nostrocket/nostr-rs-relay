@@ -5,6 +5,7 @@ use hyper::Client;
 use hyper_tls::HttpsConnector;
 use nostr::Keys;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 use async_trait::async_trait;
 use rand::Rng;
@@ -159,13 +160,18 @@ impl PaymentProcessor for LNBitsPaymentProcessor {
         let res = self.client.request(req).await?;
         // Json to Struct of LNbits callback
         let body = hyper::body::to_bytes(res.into_body()).await?;
-        debug!("check invoice: {body:?}");
-        let invoice_response: LNBitsCheckInvoiceResponse = serde_json::from_slice(&body)?;
+        let invoice_response: Value = serde_json::from_slice(&body)?;
 
-        let status = if invoice_response.paid {
-            InvoiceStatus::Paid
+        let status = if let Ok(invoice_response) =
+            serde_json::from_value::<LNBitsCheckInvoiceResponse>(invoice_response)
+        {
+            if invoice_response.paid {
+                InvoiceStatus::Paid
+            } else {
+                InvoiceStatus::Unpaid
+            }
         } else {
-            InvoiceStatus::Unpaid
+            InvoiceStatus::Expired
         };
 
         Ok(status)
