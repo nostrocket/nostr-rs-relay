@@ -129,6 +129,7 @@ impl ClientConn {
 
         // check if there is room for another subscription.
         if self.subscriptions.len() >= self.max_subs {
+            !println!(self.client_ip_addr);
             return Err(Error::SubMaxExceededError);
         }
         // add subscription
